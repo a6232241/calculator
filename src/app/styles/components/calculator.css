@@ -1,0 +1,4 @@
+.calculator-zero {
+  width: calc(40% + 0.5rem);
+  aspect-ratio: 2/1;
+}

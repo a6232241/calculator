@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import Calculator from "./app/components/Calculator";
 
 function App() {
   const [mode, setMode] = useState<"light" | "dark">();
 
-  const initialMode = (isDark: boolean) => {
+  const updateMode = (isDark: boolean) => {
     setMode(isDark ? "dark" : "light");
     localStorage.setItem("mode", isDark ? "dark" : "light");
     if (isDark) document.body.classList.add("dark");
@@ -13,9 +14,9 @@ function App() {
 
   useEffect(() => {
     if (localStorage.getItem("mode")) {
-      initialMode(localStorage.getItem("mode") === "dark");
+      updateMode(localStorage.getItem("mode") === "dark");
     } else {
-      initialMode(window?.matchMedia("(prefers-color-scheme: dark)").matches);
+      updateMode(window?.matchMedia("(prefers-color-scheme: dark)").matches);
     }
   }, []);
 
@@ -31,9 +32,9 @@ function App() {
           {mode}
         </button>
       </header>
-      <p className="w-full overflow-hidden text-black md:w-8 dark:text-white">
-        Cyan
-      </p>
+      <main className="flex h-full w-full items-center justify-center">
+        <Calculator />
+      </main>
     </div>
   );
 }
