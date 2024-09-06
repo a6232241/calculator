@@ -26,7 +26,7 @@ function App() {
   };
 
   return (
-    <div className={`h-screen w-screen bg-white dark:bg-slate-900`}>
+    <div className={`min-h-screen w-screen bg-white p-2 dark:bg-black`}>
       <header className="flex gap-2">
         <button className="text-black dark:text-white" onClick={toggleMode}>
           {mode}

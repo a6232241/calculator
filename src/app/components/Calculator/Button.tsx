@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 type PropsType = {
   onClick: () => void;
   children: string;
@@ -8,10 +10,13 @@ type PropsType = {
 const Button = ({ onClick, children, className, classNameText }: PropsType) => {
   return (
     <button
-      className={`aspect-square w-1/5 overflow-hidden rounded-full p-5 active:opacity-10 ${className}`}
+      className={twMerge(
+        "flex aspect-square w-1/5 items-center justify-center overflow-hidden rounded-full active:opacity-10",
+        className,
+      )}
       onClick={onClick}
     >
-      <span className={`text-lg font-bold text-black ${classNameText}`}>
+      <span className={twMerge("text-lg font-bold text-white", classNameText)}>
         {children}
       </span>
     </button>
