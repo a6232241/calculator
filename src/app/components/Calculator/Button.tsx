@@ -24,7 +24,7 @@ const Button = ({
       className={twMerge(
         "flex basis-1/5 items-center justify-center",
         "aspect-square overflow-hidden rounded-full disabled:opacity-50",
-        "translate duration-1000 hover:brightness-200",
+        "translate duration-500 hover:brightness-200 disabled:hover:brightness-100",
         className,
       )}
       onClick={handleClick}
