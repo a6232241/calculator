@@ -71,6 +71,7 @@ const Calculator = () => {
       default:
         break;
     }
+
     return result.toString();
   };
 
@@ -86,9 +87,6 @@ const Calculator = () => {
     let multiDivTemp: string | undefined;
 
     for (let i = 0; i < operatorList.length; i++) {
-      // 沒有運算子就不做運算
-      if (!operatorList[i]) continue;
-
       switch (operatorList[i]) {
         case "/":
         case "x":
@@ -99,7 +97,11 @@ const Calculator = () => {
           );
           break;
         default:
-          if (operatorList[i + 1] === "+" || operatorList[i + 1] === "-") {
+          if (
+            operatorList[i + 1] === "+" ||
+            operatorList[i + 1] === "-" ||
+            operatorList[i + 1] === "="
+          ) {
             result = calculate(
               result,
               valueList[i + 1] ?? "0",
@@ -121,12 +123,21 @@ const Calculator = () => {
     return multiDivTemp ?? result;
   };
 
+  const settlement = (valueList: string[], operatorList: (string | null)[]) => {
+    setValueList(
+      getResult(valueList, [
+        ...operatorList.splice(0, operatorList.length - 1),
+        "=",
+      ])?.split("") ?? ["0"],
+    );
+    setOperatorList([null]);
+  };
+
   return (
     <section className="flex aspect-[4/3] w-full max-w-full flex-col gap-2 md:w-1/4">
       <header className="px-2">
         <input
-          className="black w-full bg-transparent p-2 text-8xl font-bold text-black dark:text-white"
-          dir="rtl"
+          className="black w-full bg-transparent p-2 text-right text-8xl font-bold text-black dark:text-white"
           value={result ?? valueList[valueList.length - 1]}
           defaultValue={"0"}
         />
@@ -235,7 +246,10 @@ const Calculator = () => {
         <Button className="bg-gray-900" onClick={() => onUpdateValue(".")}>
           .
         </Button>
-        <Button className="bg-orange-500" onClick={() => {}}>
+        <Button
+          className="bg-orange-500"
+          onClick={() => settlement(valueList, operatorList)}
+        >
           =
         </Button>
       </div>
