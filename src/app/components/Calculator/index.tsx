@@ -3,6 +3,7 @@ import styles from "../../styles/components/calculator.module.css";
 import { useState } from "react";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
+import { getResult } from "./helper";
 
 const Calculator = () => {
   const [valueList, setValueList] = useState<string[]>(["0"]);
@@ -23,7 +24,9 @@ const Calculator = () => {
       );
     }
     setValueList((prev) =>
-      prev.slice(0, prev.length - 1).concat(prev[prev.length - 1] + text),
+      prev
+        .slice(0, prev.length - 1)
+        .concat((prev[prev.length - 1] + text).slice(0, 10)),
     );
   };
 
@@ -51,78 +54,6 @@ const Calculator = () => {
     setResult("0");
   };
 
-  const calculate = (prev: string, next: string, operator: string): string => {
-    let result = 0;
-    const num1 = parseFloat(prev);
-    const num2 = parseFloat(next);
-    switch (operator) {
-      case "+":
-        result = num1 + num2;
-        break;
-      case "-":
-        result = num1 - num2;
-        break;
-      case "x":
-        result = num1 * num2;
-        break;
-      case "/":
-        result = num1 / num2;
-        break;
-      default:
-        break;
-    }
-
-    return result.toString();
-  };
-
-  const getResult = (
-    valueList: string[],
-    operatorList: (string | null)[],
-  ): string | undefined => {
-    if (operatorList.length <= 1) return undefined;
-
-    let result: string | undefined =
-      operatorList[0] === "/" || operatorList[0] === "x" ? "0" : valueList[0];
-    let tempOperator: string | undefined;
-    let multiDivTemp: string | undefined;
-
-    for (let i = 0; i < operatorList.length; i++) {
-      switch (operatorList[i]) {
-        case "/":
-        case "x":
-          multiDivTemp = calculate(
-            multiDivTemp ?? valueList[i],
-            valueList[i + 1] ?? "1",
-            operatorList[i] as string,
-          );
-          break;
-        default:
-          if (
-            operatorList[i + 1] === "+" ||
-            operatorList[i + 1] === "-" ||
-            operatorList[i + 1] === "="
-          ) {
-            result = calculate(
-              result,
-              valueList[i + 1] ?? "0",
-              operatorList[i] as string,
-            );
-          } else {
-            result = calculate(
-              result,
-              multiDivTemp ?? "0",
-              tempOperator ?? "+",
-            );
-            tempOperator = operatorList[i] as string;
-            multiDivTemp = undefined;
-          }
-          break;
-      }
-    }
-
-    return multiDivTemp ?? result;
-  };
-
   const settlement = (valueList: string[], operatorList: (string | null)[]) => {
     setValueList(
       getResult(valueList, [
@@ -137,9 +68,17 @@ const Calculator = () => {
     <section className="flex aspect-[4/3] w-full max-w-full flex-col gap-2 md:w-1/4">
       <header className="px-2">
         <input
-          className="black w-full bg-transparent p-2 text-right text-8xl font-bold text-black dark:text-white"
+          className={clsx(
+            "black w-full bg-transparent p-2 text-right text-8xl font-bold text-black dark:text-white",
+            {
+              "text-7xl":
+                (result ?? valueList[valueList.length - 1]).length > 6,
+              "text-6xl":
+                (result ?? valueList[valueList.length - 1]).length > 8,
+            },
+          )}
           value={result ?? valueList[valueList.length - 1]}
-          defaultValue={"0"}
+          disabled
         />
       </header>
       <div className="flex flex-1 flex-wrap justify-evenly gap-2">
@@ -156,6 +95,7 @@ const Calculator = () => {
           className="bg-gray-300"
           classNameText="text-black"
           onClick={() => {}}
+          disabled={true}
         >
           +/-
         </Button>
@@ -163,6 +103,7 @@ const Calculator = () => {
           className="bg-gray-300"
           classNameText="text-black"
           onClick={() => {}}
+          disabled={true}
         >
           %
         </Button>
@@ -243,7 +184,11 @@ const Calculator = () => {
         >
           0
         </Button>
-        <Button className="bg-gray-900" onClick={() => onUpdateValue(".")}>
+        <Button
+          className="bg-gray-900"
+          onClick={() => onUpdateValue(".")}
+          disabled={true}
+        >
           .
         </Button>
         <Button

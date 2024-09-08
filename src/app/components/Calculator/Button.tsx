@@ -1,20 +1,34 @@
 import { twMerge } from "tailwind-merge";
 
 type PropsType = {
-  onClick: () => void;
   children: string;
-  className?: string;
   classNameText?: string;
-};
+} & React.DetailedHTMLProps<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>;
 
-const Button = ({ onClick, children, className, classNameText }: PropsType) => {
+const Button = ({
+  children,
+  className,
+  classNameText,
+  onClick,
+  ...props
+}: PropsType) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(e);
+  };
+
   return (
     <button
       className={twMerge(
-        "flex aspect-square w-1/5 items-center justify-center overflow-hidden rounded-full active:opacity-10",
+        "flex basis-1/5 items-center justify-center",
+        "aspect-square overflow-hidden rounded-full disabled:opacity-50",
+        "translate duration-1000 hover:brightness-200",
         className,
       )}
-      onClick={onClick}
+      onClick={handleClick}
+      {...props}
     >
       <span className={twMerge("text-lg font-bold text-white", classNameText)}>
         {children}

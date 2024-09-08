@@ -1,6 +1,6 @@
 .zero {
-  width: theme(width.2/5);
-  aspect-ratio: 2/1;
+  flex-basis: calc(40% + 20% / 5);
   justify-content: flex-start;
   padding-left: 5%;
+  aspect-ratio: 0;
 }
