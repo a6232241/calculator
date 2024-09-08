@@ -55,12 +55,11 @@ const Calculator = () => {
   };
 
   const settlement = (valueList: string[], operatorList: (string | null)[]) => {
-    setValueList(
-      getResult(valueList, [
-        ...operatorList.splice(0, operatorList.length - 1),
-        "=",
-      ])?.split("") ?? ["0"],
-    );
+    let _result = getResult(valueList, [
+      ...operatorList.splice(0, operatorList.length - 1),
+      "=",
+    ]);
+    setValueList(_result ? [_result] : ["0"]);
     setOperatorList([null]);
   };
 
